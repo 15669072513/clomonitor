@@ -70,7 +70,7 @@ struct Args {
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
-    println!("args: {:#?}", args);
+    // println!("args: {:#?}", args);
 
     // Check if required Github token is present in environment
     let mut github_token = String::new();

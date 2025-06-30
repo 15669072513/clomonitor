@@ -247,7 +247,7 @@ impl<T> From<Result<Option<&ScorecardCheck>, &Error>> for CheckOutput<T> {
             },
             Err(err) => {
                 // 记录错误日志（包含完整错误链）
-                println!("操作失败日志:{} ",format!("{:#}", err) );
+                // println!("操作失败日志:{} ",format!("{:#}", err) );
                 // 返回带失败原因的结果
                 CheckOutput::failed().fail_reason(Some(format!("{:#}", err)))
             }
@@ -275,7 +275,7 @@ macro_rules! run {
                 Ok(output) => output,
                 Err(err) => {
                     // 记录错误日志（包含完整错误链）
-                println!("run操作失败日志:{} ",format!("{:#}", err) );
+                // println!("run操作失败日志:{} ",format!("{:#}", err) );
                     // 返回带失败原因的结果
                     CheckOutput::failed()
                         .fail_reason(Some(format!("{:#}", err)))
@@ -308,7 +308,7 @@ macro_rules! run_async {
                 Ok(output) => output,
                 Err(err) => {
                     // 记录错误日志（包含完整错误链）
-                    println!("run_async操作失败日志:{} ",format!("{:#}", err) );
+                    // println!("run_async操作失败日志:{} ",format!("{:#}", err) );
                     // 返回带失败原因的结果
                     CheckOutput::failed()
                         .fail_reason(Some(format!("{:#}", err)))

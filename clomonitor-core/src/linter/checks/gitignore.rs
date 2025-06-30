@@ -36,12 +36,12 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
         let abs_path = input.li.root.join(&path);
 
         // 打印调试信息
-        println!(
-            "Found matching file at path: {}, patterns: {:?}，abs path: {}",
-            path.display(),
-            &FILE_PATTERNS,
-            abs_path.display()
-        );
+        // println!(
+        //     "Found matching file at path: {}, patterns: {:?}，abs path: {}",
+        //     path.display(),
+        //     &FILE_PATTERNS,
+        //     abs_path.display()
+        // );
 
 
         // 检查文件是否存在且可读（双重验证）
@@ -56,7 +56,7 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
             return Ok(CheckOutput::passed().url(Some(path.display().to_string())));
         } else {
             // 文件为空
-            println!("File {} is empty", path.display());
+            // println!("File {} is empty", path.display());
         }
     }
 

@@ -37,7 +37,7 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
             continue;
         }
 
-        println!("Found issue template at: {}", path.display());
+        // println!("Found issue template at: {}", path.display());
 
         if path.is_file() {
             // 如果是文件，检查是否有内容
@@ -45,7 +45,7 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
                 .with_context(|| format!("Failed to read issue template file: {}", path.display()))?;
 
             if !content.trim().is_empty() {
-                return Ok(CheckOutput::passed());
+                return Ok(CheckOutput::passed().url(Some(path.display().to_string())));
             }
         } else if path.is_dir() {
             // 如果是目录，检查其中是否有.md文件
@@ -59,7 +59,7 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
                 });
 
             if has_md_files {
-                return Ok(CheckOutput::passed());
+                return Ok(CheckOutput::passed().url(Some(path.display().to_string())));
             }
         }
     }

@@ -37,7 +37,7 @@ pub(crate) fn find_file_or_readme_ref(
         //     path.display(),
         //     patterns
         // );
-        let mut url = String::new();
+        let mut url = path.display().to_string();
         if input.li.mode == "mix" {
              url = github::build_url(
                 &path,
@@ -53,7 +53,7 @@ pub(crate) fn find_file_or_readme_ref(
     // Reference in README file
     if !re.is_empty() {
         if readme_matches(&input.li.root, re)? {
-            println!("stdout Found matching reference in README file");
+            // println!("stdout Found matching reference in README file");
             return Ok(CheckOutput::passed());
         }
     }

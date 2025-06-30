@@ -47,7 +47,7 @@ pub(crate) async fn check(input: &CheckInput<'_>) -> Result<CheckOutput> {
     // File in .github repo
     // Only check GitHub remote if mode is "mix"
     if input.li.mode == "mix" {
-        println!("Checking GitHub for CONTRIBUTING.md (mix mode)");
+        // println!("Checking GitHub for CONTRIBUTING.md (mix mode)");
         if let Some(url) = github::has_community_health_file("CONTRIBUTING.md", &input.gh_md).await? {
             return Ok(CheckOutput::passed().url(Some(url)));
         }
