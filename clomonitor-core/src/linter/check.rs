@@ -36,11 +36,14 @@ pub(crate) struct CheckInput<'a> {
 impl CheckInput<'_> {
     pub(crate) async fn new(li: &LinterInput) -> Result<CheckInput> {
         // Check if required external tools are available
-        if which("scorecard").is_err() {
-            return Err(format_err!(
+        if li.mode == "mix" {
+            if which("scorecard").is_err() {
+                return Err(format_err!(
                 "scorecard not found in PATH (https://github.com/ossf/scorecard#installation)"
             ));
+            }
         }
+
 
         // Get CLOMonitor metadata
         let cm_md = Metadata::from(li.root.join(METADATA_FILE))?;
