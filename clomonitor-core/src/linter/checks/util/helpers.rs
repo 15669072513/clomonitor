@@ -32,11 +32,11 @@ pub(crate) fn find_file_or_readme_ref(
     })? {
         // 打印找到的文件路径
         // 打印仓库根路径
-        println!(
-            "stdout Found matching file at path: {}, patterns:{:?}",
-            path.display(),
-            patterns
-        );
+        // println!(
+        //     "stdout Found matching file at path: {}, patterns:{:?}",
+        //     path.display(),
+        //     patterns
+        // );
         let mut url = String::new();
         if input.li.mode == "mix" {
              url = github::build_url(

@@ -47,7 +47,6 @@ static README_REF: LazyLock<RegexSet> = LazyLock::new(|| {
 /// Check main function.
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
     // File in repo or reference in README file
-    println!("check get_started");
     let output = find_file_or_readme_ref(input, &FILE_PATTERNS, &README_REF)?;
     if output.passed {
         return Ok(output);
