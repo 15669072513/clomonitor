@@ -29,6 +29,9 @@ pub(crate) static TRADEMARK_DISCLAIMER: LazyLock<RegexSet> = LazyLock::new(|| {
 
 /// Check main function.
 pub(crate) async fn check(input: &CheckInput<'_>) -> Result<CheckOutput> {
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     // Trademark disclaimer in website setup in Github
     if let Some(url) = &input.gh_md.homepage_url {
         if !url.is_empty() && content::remote_matches(url, &TRADEMARK_DISCLAIMER).await? {

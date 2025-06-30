@@ -34,6 +34,9 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
             return Ok(CheckOutput::passed());
         }
     }
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
 
     // DCO check in Github
     if github::has_check(&input.gh_md, &CHECK_REF) {

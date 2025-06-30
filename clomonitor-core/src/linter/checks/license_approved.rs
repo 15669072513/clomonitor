@@ -12,12 +12,17 @@ pub(crate) const ID: CheckId = "license_approved";
 pub(crate) const WEIGHT: usize = 10;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 3] = [CheckSet::Code, CheckSet::CodeLite, CheckSet::Docs];
+pub(crate) const CHECK_SETS: [CheckSet; 4] = [CheckSet::Code, CheckSet::CodeLite, CheckSet::Docs,CheckSet::AntIncubator];
 
 /// CNCF approved licenses.
 /// https://github.com/cncf/foundation/blob/master/allowed-third-party-license-policy.md
-static APPROVED_LICENSES: [&str; 11] = [
+static APPROVED_LICENSES: [&str; 16] = [
     "Apache-2.0",
+    "GPL",
+    "GPLv2",
+    "GPLv3",
+    "LGPL",
+    "AGPLv3",
     "BSD-2-Clause",
     "BSD-2-Clause-FreeBSD",
     "BSD-3-Clause",

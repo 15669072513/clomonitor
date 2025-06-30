@@ -54,6 +54,28 @@ impl MdRepository {
     }
 }
 
+impl Default for MdRepository {
+    fn default() -> Self {
+        Self {
+            code_of_conduct: None,
+            default_branch_ref: Some(MdRepositoryDefaultBranchRef {
+                name: "master".to_string(),
+            }),
+            discussions: MdRepositoryDiscussions { nodes: None },
+            homepage_url: None,
+            license_info: None,
+            name: String::new(),
+            pull_requests: MdRepositoryPullRequests { nodes: None },
+            owner: MdRepositoryOwner {
+                login: String::new(),
+                on: MdRepositoryOwnerOn::Organization,
+            },
+            releases: MdRepositoryReleases { nodes: None },
+            security_policy_url: None,
+        }
+    }
+}
+
 /// Get repository's metadata from the Github GraphQL API.
 pub(crate) async fn metadata(repo_url: &str, token: &str) -> Result<MdRepository> {
     let (owner, repo) = get_owner_and_repo(repo_url)?;

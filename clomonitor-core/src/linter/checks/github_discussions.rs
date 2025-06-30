@@ -17,6 +17,9 @@ pub(crate) const CHECK_SETS: [CheckSet; 1] = [CheckSet::Community];
 
 /// Check main function.
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     if let Some(latest_discussion) = input
         .gh_md
         .discussions

@@ -16,7 +16,7 @@ pub(crate) const ID: CheckId = "license_spdx_id";
 pub(crate) const WEIGHT: usize = 5;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 3] = [CheckSet::Code, CheckSet::CodeLite, CheckSet::Docs];
+pub(crate) const CHECK_SETS: [CheckSet; 4] = [CheckSet::Code, CheckSet::CodeLite, CheckSet::Docs,CheckSet::AntIncubator];
 
 /// SPDX licenses data. Used to detect license used by repositories.
 const LICENSES_DATA: &[u8] = include_bytes!("licenses/licenses.bin.zstd");

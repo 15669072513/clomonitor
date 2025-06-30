@@ -38,6 +38,10 @@ pub(crate) mod token_permissions;
 pub(crate) mod trademark_disclaimer;
 pub(crate) mod util;
 pub(crate) mod website;
+pub(crate) mod get_started;
+pub(crate) mod gitignore;
+pub(crate) mod issue_template;
+pub(crate) mod pr_template;
 
 pub(crate) static CHECKS: LazyLock<HashMap<CheckId, CheckConfig>> = LazyLock::new(|| {
     let mut checks = HashMap::new();
@@ -99,6 +103,10 @@ pub(crate) static CHECKS: LazyLock<HashMap<CheckId, CheckConfig>> = LazyLock::ne
     register_check!(token_permissions, "Token-Permissions");
     register_check!(trademark_disclaimer);
     register_check!(website);
+    register_check!(get_started);
+    register_check!(gitignore);
+    register_check!(issue_template);
+    register_check!(pr_template);
 
     checks
 });

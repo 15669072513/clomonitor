@@ -50,13 +50,28 @@ impl CheckInput<'_> {
         // GitHub secondary rate limits. So they should not be run concurrently.
 
         // Get GitHub metadata
-        let gh_md = github::metadata(&li.url, &li.github_token).await?;
+        let gh_md = if li.mode == "mix" {
+            github::metadata(&li.url, &li.github_token)
+                .await
+                .map_err(|e| {
+                    log::error!("Failed to fetch GitHub metadata: {}", e);
+                    e // 可以添加自定义错误转换
+                })?
+        } else {
+            github::md::MdRepository::default()
+        };
 
         // Get OpenSSF scorecard
-        let scorecard = scorecard(&li.url, &li.github_token)
-            .await
-            .context("error running scorecard command");
 
+        let scorecard = if li.mode == "mix" {
+            log::info!("Running scorecard check for repository: {}", li.url);
+            scorecard(&li.url, &li.github_token)
+                .await
+                .context("error running scorecard command")
+        } else {
+            log::info!("Skipping scorecard check (mode is not 'mix')");
+            Ok(Scorecard::default())
+        };
         // Get OpenSSF security insights.
         let security_insights = SecurityInsights::new(&li.root);
 
@@ -230,7 +245,12 @@ impl<T> From<Result<Option<&ScorecardCheck>, &Error>> for CheckOutput<T> {
                 }
                 None => CheckOutput::not_passed(),
             },
-            Err(err) => CheckOutput::failed().fail_reason(Some(format!("{err:#}"))),
+            Err(err) => {
+                // 记录错误日志（包含完整错误链）
+                println!("操作失败日志:{} ",format!("{:#}", err) );
+                // 返回带失败原因的结果
+                CheckOutput::failed().fail_reason(Some(format!("{:#}", err)))
+            }
         }
     }
 }
@@ -253,7 +273,14 @@ macro_rules! run {
             // Call sync check function and wrap returned check output in an option
             let output = match $check::check($input) {
                 Ok(output) => output,
-                Err(err) => CheckOutput::failed().fail_reason(Some(format!("{:#}", err))),
+                Err(err) => {
+                    // 记录错误日志（包含完整错误链）
+                println!("run操作失败日志:{} ",format!("{:#}", err) );
+                    // 返回带失败原因的结果
+                    CheckOutput::failed()
+                        .fail_reason(Some(format!("{:#}", err)))
+                }
+                // Err(err) => CheckOutput::failed().fail_reason(Some(format!("{:#}", err))),
             };
             Some(output)
         })()
@@ -279,7 +306,14 @@ macro_rules! run_async {
             // Call async check function and wrap returned check output in an option
             let output = match $check::check($input).await {
                 Ok(output) => output,
-                Err(err) => CheckOutput::failed().fail_reason(Some(format!("{:#}", err))),
+                Err(err) => {
+                    // 记录错误日志（包含完整错误链）
+                    println!("run_async操作失败日志:{} ",format!("{:#}", err) );
+                    // 返回带失败原因的结果
+                    CheckOutput::failed()
+                        .fail_reason(Some(format!("{:#}", err)))
+                }
+                // Err(err) => CheckOutput::failed().fail_reason(Some(format!("{:#}", err))),
             };
             Some(output)
         }

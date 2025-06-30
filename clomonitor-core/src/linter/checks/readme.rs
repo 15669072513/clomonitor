@@ -19,11 +19,12 @@ pub(crate) const ID: CheckId = "readme";
 pub(crate) const WEIGHT: usize = 10;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 4] = [
+pub(crate) const CHECK_SETS: [CheckSet; 5] = [
     CheckSet::Code,
     CheckSet::CodeLite,
     CheckSet::Community,
     CheckSet::Docs,
+    CheckSet::AntIncubator
 ];
 
 /// Patterns used to locate a file in the repository.
@@ -33,6 +34,9 @@ pub(crate) static FILE_PATTERNS: [&str; 3] = ["README*", ".github/README*", "doc
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
     // File in repo
     if let Some(path) = path::find(&readme_globs(&input.li.root))? {
+        if input.li.mode == "local" {
+            return Ok(CheckOutput::passed().url(Some(path.display().to_string())));
+        }
         let url = github::build_url(
             &path,
             &input.gh_md.owner.login,

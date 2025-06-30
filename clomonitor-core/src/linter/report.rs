@@ -65,6 +65,10 @@ pub struct Documentation {
     pub roadmap: Option<CheckOutput>,
     pub summary_table: Option<CheckOutput>,
     pub website: Option<CheckOutput>,
+    pub get_started: Option<CheckOutput>,
+    pub gitignore: Option<CheckOutput>,
+    pub issue_template: Option<CheckOutput>,
+    pub pr_template: Option<CheckOutput>,
 }
 
 #[rustfmt::skip]

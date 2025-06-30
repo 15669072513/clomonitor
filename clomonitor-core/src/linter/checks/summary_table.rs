@@ -18,6 +18,9 @@ pub(crate) const CHECK_SETS: [CheckSet; 1] = [CheckSet::Community];
 
 /// Check main function.
 pub(crate) async fn check(input: &CheckInput<'_>) -> Result<CheckOutput> {
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     // Get landscape (if necessary info is available)
     let mut landscape = None;
     if let Some(project) = &input.li.project.as_ref() {

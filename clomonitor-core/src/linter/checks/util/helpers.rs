@@ -23,25 +23,41 @@ pub(crate) fn find_file_or_readme_ref(
     patterns: &[&str],
     re: &RegexSet,
 ) -> Result<CheckOutput> {
+
     // File in repo
     if let Some(path) = path::find(&Globs {
         root: &input.li.root,
         patterns,
         case_sensitive: false,
     })? {
-        let url = github::build_url(
-            &path,
-            &input.gh_md.owner.login,
-            &input.gh_md.name,
-            &github::default_branch(input.gh_md.default_branch_ref.as_ref()),
+        // 打印找到的文件路径
+        // 打印仓库根路径
+        println!(
+            "stdout Found matching file at path: {}, patterns:{:?}",
+            path.display(),
+            patterns
         );
+        let mut url = String::new();
+        if input.li.mode == "mix" {
+             url = github::build_url(
+                &path,
+                &input.gh_md.owner.login,
+                &input.gh_md.name,
+                &github::default_branch(input.gh_md.default_branch_ref.as_ref()),
+            );
+        }
+        // 打印生成的GitHub URL
         return Ok(CheckOutput::passed().url(Some(url)));
     }
 
     // Reference in README file
-    if readme_matches(&input.li.root, re)? {
-        return Ok(CheckOutput::passed());
+    if !re.is_empty() {
+        if readme_matches(&input.li.root, re)? {
+            println!("stdout Found matching reference in README file");
+            return Ok(CheckOutput::passed());
+        }
     }
+
 
     Ok(CheckOutput::not_passed())
 }

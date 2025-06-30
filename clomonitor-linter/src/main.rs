@@ -42,12 +42,16 @@ authentication. Please make sure you provide a Github token (with public_repo
 scope) by setting the GITHUB_TOKEN environment variable."
 )]
 struct Args {
+
+    /// 模式，支持本地模式和url本地混个模式；默认混和模式: local; mix
+    #[clap(long)]
+    mode: String,
     /// Repository local path (used for checks that can be done locally)
     #[clap(long)]
     path: PathBuf,
 
     /// Repository url [https://github.com/org/repo] (used for some GitHub remote checks)
-    #[clap(long)]
+    #[clap(long, default_value = "")]
     url: String,
 
     /// Sets of checks to run
@@ -66,18 +70,29 @@ struct Args {
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
+    println!("args: {:#?}", args);
 
     // Check if required Github token is present in environment
-    let github_token = match env::var(GITHUB_TOKEN) {
-        Err(_) => return Err(format_err!("{} not found in environment", GITHUB_TOKEN)),
-        Ok(token) => token,
-    };
+    let mut github_token = String::new();
+    if args.mode == "local" {
+        github_token = String::new();
+    }else{
+        if args.url.is_empty() {
+            return Err(format_err!("url is empty"));
+        }
+        github_token = match env::var(GITHUB_TOKEN) {
+            Err(_) => return Err(format_err!("{} not found in environment", GITHUB_TOKEN)),
+            Ok(token) => token,
+        };
+    }
+    // end------------------------------------------
 
     // Lint repository provided
     let input = LinterInput {
         project: None,
         root: args.path.clone(),
         url: args.url.clone(),
+        mode: args.mode.clone(),
         check_sets: args.check_set.clone(),
         github_token,
     };

@@ -88,6 +88,22 @@ pub(crate) fn display(
             cell_check(report.documentation.contributing.as_ref()),
         ])
         .add_row(vec![
+            cell_entry("Documentation / Get Started"),
+            cell_check(report.documentation.get_started.as_ref()),
+        ])
+        .add_row(vec![
+            cell_entry("Documentation / .gitignore文件"),
+            cell_check(report.documentation.gitignore.as_ref()),
+        ])
+        .add_row(vec![
+            cell_entry("Documentation / Pull Request模版"),
+            cell_check(report.documentation.pr_template.as_ref()),
+        ])
+        .add_row(vec![
+            cell_entry("Documentation / Issue模版"),
+            cell_check(report.documentation.issue_template.as_ref()),
+        ])
+        .add_row(vec![
             cell_entry("Documentation / Governance"),
             cell_check(report.documentation.governance.as_ref()),
         ])
@@ -285,8 +301,8 @@ fn cell_check<T>(output: Option<&CheckOutput<T>>) -> Cell {
         Some(r) => match (r.passed, r.exempt, r.failed) {
             (true, _, _) => (SUCCESS_SYMBOL.to_string(), Color::Green),
             (false, true, _) => (EXEMPT_MSG.to_string(), Color::Grey),
-            (false, _, false) => (FAILURE_SYMBOL.to_string(), Color::Red),
-            (false, _, true) => (WARNING_SYMBOL.to_string(), Color::Yellow),
+            (false, _, false) => (FAILURE_SYMBOL.to_string(), Color::Red),//失败
+            (false, _, true) => (WARNING_SYMBOL.to_string(), Color::Yellow),//执行异常
         },
         None => (NOT_APPLICABLE_MSG.to_string(), Color::Grey),
     };

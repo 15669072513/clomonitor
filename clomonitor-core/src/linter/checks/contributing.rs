@@ -17,8 +17,8 @@ pub(crate) const ID: CheckId = "contributing";
 pub(crate) const WEIGHT: usize = 4;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 3] =
-    [CheckSet::Code, CheckSet::CodeLite, CheckSet::Community];
+pub(crate) const CHECK_SETS: [CheckSet; 4] =
+    [CheckSet::Code, CheckSet::CodeLite, CheckSet::Community,CheckSet::AntIncubator];
 
 /// Patterns used to locate a file in the repository.
 const FILE_PATTERNS: [&str; 3] = [
@@ -45,8 +45,12 @@ pub(crate) async fn check(input: &CheckInput<'_>) -> Result<CheckOutput> {
     }
 
     // File in .github repo
-    if let Some(url) = github::has_community_health_file("CONTRIBUTING.md", &input.gh_md).await? {
-        return Ok(CheckOutput::passed().url(Some(url)));
+    // Only check GitHub remote if mode is "mix"
+    if input.li.mode == "mix" {
+        println!("Checking GitHub for CONTRIBUTING.md (mix mode)");
+        if let Some(url) = github::has_community_health_file("CONTRIBUTING.md", &input.gh_md).await? {
+            return Ok(CheckOutput::passed().url(Some(url)));
+        }
     }
 
     Ok(CheckOutput::not_passed())

@@ -34,6 +34,9 @@ static CHECK_REF: LazyLock<RegexSet> = LazyLock::new(|| {
 #[allow(clippy::unnecessary_wraps)]
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
     // CLA check in Github
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     if github::has_check(&input.gh_md, &CHECK_REF) {
         return Ok(CheckOutput::passed());
     }

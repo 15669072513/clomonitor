@@ -43,6 +43,7 @@ pub struct LinterInput {
     pub project: Option<Project>,
     pub root: PathBuf,
     pub url: String,
+    pub mode: String,
     pub check_sets: Vec<CheckSet>,
     pub github_token: String,
 }
@@ -77,6 +78,8 @@ pub enum CheckSet {
     Community,
     #[postgres(name = "docs")]
     Docs,
+    #[postgres(name = "ant-incubator")]
+    AntIncubator,  // 新增的蚂蚁孵化器检查集
 }
 
 impl fmt::Display for CheckSet {
@@ -86,6 +89,7 @@ impl fmt::Display for CheckSet {
             Self::CodeLite => "CODE-LITE",
             Self::Community => "COMMUNITY",
             Self::Docs => "DOCS",
+            Self::AntIncubator => "ANT-INCUBATOR",
         };
         write!(f, "{output}")
     }
@@ -136,6 +140,10 @@ impl Linter for CoreLinter {
                 roadmap: run!(roadmap, &ci),
                 summary_table,
                 website: run!(website, &ci),
+                get_started: run!(get_started, &ci),
+                gitignore: run!(gitignore, &ci),
+                issue_template: run!(issue_template, &ci),
+                pr_template: run!(pr_template, &ci),
             },
             license: License {
                 license_approved: license_approved::check(&ci, spdx_id_value),

@@ -19,6 +19,9 @@ pub(crate) const CHECK_SETS: [CheckSet; 2] = [CheckSet::Code, CheckSet::CodeLite
 
 /// Check main function.
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     // Recent release (< 1 year old) in GitHub
     if let Some(latest_release) = github::latest_release(&input.gh_md) {
         let created_at = OffsetDateTime::parse(&latest_release.created_at, &Rfc3339)?;

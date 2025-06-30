@@ -34,6 +34,9 @@ static RELEASE_REF: LazyLock<RegexSet> =
 
 /// Check main function.
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     // Asset in last release
     if let Some(true) = github::latest_release(&input.gh_md)
         .and_then(|r| r.release_assets.nodes.as_ref())

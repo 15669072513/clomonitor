@@ -19,6 +19,14 @@ pub(crate) struct ScorecardCheck {
     pub score: f64,
     pub documentation: ScorecardCheckDocs,
 }
+// 实现 Default trait
+impl Default for Scorecard {
+    fn default() -> Self {
+        Scorecard {
+            checks: Vec::new(), // 默认空检查列表
+        }
+    }
+}
 
 /// Scorecard check documentation.
 #[derive(Debug, Clone, PartialEq, Deserialize)]

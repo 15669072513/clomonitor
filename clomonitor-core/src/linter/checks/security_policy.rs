@@ -38,7 +38,9 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
     if output.passed {
         return Ok(output);
     }
-
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     // File in Github (default community health file, for example)
     if let Some(url) = input.gh_md.security_policy_url.as_ref() {
         return Ok(CheckOutput::passed().url(Some(url.clone())));

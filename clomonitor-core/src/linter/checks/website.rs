@@ -17,6 +17,9 @@ pub(crate) const CHECK_SETS: [CheckSet; 1] = [CheckSet::Community];
 /// Check main function.
 #[allow(clippy::unnecessary_wraps)]
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     // Website in Github
     if let Some(url) = &input.gh_md.homepage_url {
         if !url.is_empty() {

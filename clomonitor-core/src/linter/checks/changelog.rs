@@ -17,7 +17,7 @@ pub(crate) const ID: CheckId = "changelog";
 pub(crate) const WEIGHT: usize = 1;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 1] = [CheckSet::Code];
+pub(crate) const CHECK_SETS: [CheckSet; 2] = [CheckSet::Code,CheckSet::AntIncubator];
 
 /// Patterns used to locate a file in the repository.
 pub(crate) static FILE_PATTERNS: [&str; 1] = ["changelog*"];
@@ -41,6 +41,9 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
     let output = find_file_or_readme_ref(input, &FILE_PATTERNS, &README_REF)?;
     if output.passed {
         return Ok(output);
+    }
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
     }
 
     // Reference in last release

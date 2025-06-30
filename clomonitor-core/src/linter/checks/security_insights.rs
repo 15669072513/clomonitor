@@ -18,6 +18,9 @@ pub(crate) const CHECK_SETS: [CheckSet; 1] = [CheckSet::Code];
 /// Check main function.
 #[allow(clippy::unnecessary_wraps)]
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
+    if input.li.mode == "local" {
+        return Ok(CheckOutput::not_passed());
+    }
     let output = match input
         .security_insights
         .as_ref()
