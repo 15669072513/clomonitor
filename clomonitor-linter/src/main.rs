@@ -74,9 +74,7 @@ async fn main() -> Result<()> {
 
     // Check if required Github token is present in environment
     let mut github_token = String::new();
-    if args.mode == "local" {
-        github_token = String::new();
-    }else{
+    if args.mode == "mix" {
         if args.url.is_empty() {
             return Err(format_err!("url is empty"));
         }
