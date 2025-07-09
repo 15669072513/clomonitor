@@ -1,5 +1,4 @@
 
-use std::error::Error;
 use anyhow::{Context, Result};
 use std::fs;
 

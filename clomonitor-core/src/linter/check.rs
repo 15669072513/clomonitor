@@ -57,7 +57,6 @@ impl CheckInput<'_> {
             github::metadata(&li.url, &li.github_token)
                 .await
                 .map_err(|e| {
-                    log::error!("Failed to fetch GitHub metadata: {}", e);
                     e // 可以添加自定义错误转换
                 })?
         } else {
@@ -67,12 +66,10 @@ impl CheckInput<'_> {
         // Get OpenSSF scorecard
 
         let scorecard = if li.mode == "mix" {
-            log::info!("Running scorecard check for repository: {}", li.url);
             scorecard(&li.url, &li.github_token)
                 .await
                 .context("error running scorecard command")
         } else {
-            log::info!("Skipping scorecard check (mode is not 'mix')");
             Ok(Scorecard::default())
         };
         // Get OpenSSF security insights.
