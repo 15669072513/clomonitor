@@ -90,3 +90,6 @@ usvg = "0.27.0" # do-not-upgrade
 uuid = { version = "1.17.0", features = ["serde"] }
 which = "7.0.3"
 wiremock = "0.6.3"
+#liuhq
+glib = { version = "0.10.0", features = ["static"] }
+
