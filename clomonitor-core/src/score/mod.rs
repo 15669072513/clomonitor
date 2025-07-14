@@ -15,6 +15,12 @@ pub struct Score {
     pub documentation_weight: Option<usize>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub version_control: Option<f64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub version_control_weight: Option<usize>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub license: Option<f64>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -63,6 +69,11 @@ pub fn calculate(report: &Report) -> Score {
         &report.documentation.available(),
         &report.documentation.passed_or_exempt(),
     );
+    (score.version_control, score.version_control_weight) = calculate_section(
+        &report.version_control.available(),
+        &report.version_control.passed_or_exempt(),
+    );
+
     (score.license, score.license_weight) = calculate_section(
         &report.license.available(),
         &report.license.passed_or_exempt(),
@@ -81,6 +92,7 @@ pub fn calculate(report: &Report) -> Score {
     // Global
     let sections_scores = &[
         score.documentation,
+        score.version_control,
         score.license,
         score.best_practices,
         score.security,
@@ -88,6 +100,7 @@ pub fn calculate(report: &Report) -> Score {
     ];
     let sections_weights = &[
         score.documentation_weight,
+        score.version_control_weight,
         score.license_weight,
         score.best_practices_weight,
         score.security_weight,
@@ -135,6 +148,7 @@ pub fn merge(scores: &[Score]) -> Score {
     // calculate the coefficient we'll apply to each of the scores.
     let mut global_weights_sum = 0;
     let mut documentation_weights_sum = 0;
+    let mut version_control_weights_sum = 0;
     let mut license_weights_sum = 0;
     let mut best_practices_weights_sum = 0;
     let mut security_weights_sum = 0;
@@ -142,6 +156,7 @@ pub fn merge(scores: &[Score]) -> Score {
     for score in scores {
         global_weights_sum += score.global_weight;
         documentation_weights_sum += score.documentation_weight.unwrap_or_default();
+        version_control_weights_sum += score.version_control_weight.unwrap_or_default();
         license_weights_sum += score.license_weight.unwrap_or_default();
         best_practices_weights_sum += score.best_practices_weight.unwrap_or_default();
         security_weights_sum += score.security_weight.unwrap_or_default();
@@ -168,6 +183,11 @@ pub fn merge(scores: &[Score]) -> Score {
             m.documentation,
             s.documentation,
             s.documentation_weight.unwrap_or_default() as f64 / documentation_weights_sum as f64,
+        );
+        m.version_control = merge(
+            m.version_control,
+            s.version_control,
+            s.version_control_weight.unwrap_or_default() as f64 / version_control_weights_sum as f64,
         );
         m.license = merge(
             m.license,

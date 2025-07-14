@@ -92,18 +92,6 @@ pub(crate) fn display(
             cell_check(report.documentation.get_started.as_ref()),
         ])
         .add_row(vec![
-            cell_entry("Documentation / .gitignore文件"),
-            cell_check(report.documentation.gitignore.as_ref()),
-        ])
-        .add_row(vec![
-            cell_entry("Documentation / Pull Request模版"),
-            cell_check(report.documentation.pr_template.as_ref()),
-        ])
-        .add_row(vec![
-            cell_entry("Documentation / Issue模版"),
-            cell_check(report.documentation.issue_template.as_ref()),
-        ])
-        .add_row(vec![
             cell_entry("Documentation / Governance"),
             cell_check(report.documentation.governance.as_ref()),
         ])
@@ -126,6 +114,18 @@ pub(crate) fn display(
         .add_row(vec![
             cell_entry("Documentation / Website"),
             cell_check(report.documentation.website.as_ref()),
+        ])
+        .add_row(vec![
+            cell_entry("VersionControl / .gitignore文件"),
+            cell_check(report.version_control.gitignore.as_ref()),
+        ])
+        .add_row(vec![
+            cell_entry("VersionControl / Pull Request模版"),
+            cell_check(report.version_control.pr_template.as_ref()),
+        ])
+        .add_row(vec![
+            cell_entry("VersionControl / Issue模版"),
+            cell_check(report.version_control.issue_template.as_ref()),
         ])
         .add_row(vec![
             cell_entry("License"),

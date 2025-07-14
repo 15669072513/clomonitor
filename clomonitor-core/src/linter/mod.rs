@@ -141,6 +141,9 @@ impl Linter for CoreLinter {
                 summary_table,
                 website: run!(website, &ci),
                 get_started: run!(get_started, &ci),
+
+            },
+            version_control: VersionControl {
                 gitignore: run!(gitignore, &ci),
                 issue_template: run!(issue_template, &ci),
                 pr_template: run!(pr_template, &ci),

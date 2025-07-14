@@ -3,7 +3,7 @@
 #cargo install --path clomonitor-linter
 #cd clomonitor-linter
 #cargo build   --release
-#cargo build  --target x86_64-unknown-linux-musl --release
+cargo build  --target x86_64-unknown-linux-musl --release
 #cd ..
 
 
@@ -15,7 +15,7 @@
 
 #scopy;从linux机器拷贝Linux版本到本地项目
 #scp root@8.218.11.98:/root/clomonitor/target/release/clomonitor-linter /Users/liuhq/incubator/app/service/src/main/resources/clomonitor-linter-linux-musl
-scp root@8.218.11.98:/root/clomonitor/target/release/clomonitor-linter /Users/liuhq/incubator/app/service/src/main/resources/clomonitor-linter-linux-glib217
+#scp root@8.218.11.98:/root/clomonitor/target/x86_64-unknown-linux-musl/release/clomonitor-linter /Users/liuhq/incubator/app/service/src/main/resources/clomonitor-linter-centos7-musl
 
 
 

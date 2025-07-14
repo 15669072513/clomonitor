@@ -6,6 +6,7 @@ use super::{check::CheckId, checks::*, CheckOutput};
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Report {
     pub documentation: Documentation,
+    pub version_control: VersionControl,
     pub license: License,
     pub best_practices: BestPractices,
     pub security: Security,
@@ -66,11 +67,7 @@ pub struct Documentation {
     pub summary_table: Option<CheckOutput>,
     pub website: Option<CheckOutput>,
     pub get_started: Option<CheckOutput>,
-    pub gitignore: Option<CheckOutput>,
-    pub issue_template: Option<CheckOutput>,
-    pub pr_template: Option<CheckOutput>,
 }
-
 #[rustfmt::skip]
 section_impl!(
     Documentation,
@@ -85,6 +82,25 @@ section_impl!(
     summary_table,
     website
 );
+
+/// VersionControl section of the report.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct VersionControl {
+    pub gitignore: Option<CheckOutput>,
+    pub issue_template: Option<CheckOutput>,
+    pub pr_template: Option<CheckOutput>
+}
+
+
+#[rustfmt::skip]
+section_impl!(
+    VersionControl,
+    gitignore,
+    issue_template,
+    pr_template
+);
+
+
 
 /// License section of the report.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
