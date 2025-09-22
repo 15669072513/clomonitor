@@ -17,7 +17,7 @@ pub(crate) const ID: CheckId = "license_scanning";
 pub(crate) const WEIGHT: usize = 5;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 1] = [CheckSet::Code];
+pub(crate) const CHECK_SETS: [CheckSet; 2] = [CheckSet::Code,CheckSet::AntIncubator];
 
 pub(crate) static FOSSA_URL: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r#"(https://app.fossa.(?:io|com)/projects/[^"'\)]+)"#)

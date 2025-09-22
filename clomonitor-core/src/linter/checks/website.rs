@@ -12,7 +12,7 @@ pub(crate) const ID: CheckId = "website";
 pub(crate) const WEIGHT: usize = 4;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 1] = [CheckSet::Community];
+pub(crate) const CHECK_SETS: [CheckSet; 2] = [CheckSet::Community,CheckSet::AntIncubator];
 
 /// Check main function.
 #[allow(clippy::unnecessary_wraps)]

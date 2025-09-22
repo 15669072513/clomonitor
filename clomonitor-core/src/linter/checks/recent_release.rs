@@ -15,7 +15,7 @@ pub(crate) const ID: CheckId = "recent_release";
 pub(crate) const WEIGHT: usize = 3;
 
 /// Check sets this check belongs to.
-pub(crate) const CHECK_SETS: [CheckSet; 2] = [CheckSet::Code, CheckSet::CodeLite];
+pub(crate) const CHECK_SETS: [CheckSet; 3] = [CheckSet::Code, CheckSet::CodeLite,CheckSet::AntIncubator];
 
 /// Check main function.
 pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
@@ -25,7 +25,7 @@ pub(crate) fn check(input: &CheckInput) -> Result<CheckOutput> {
     // Recent release (< 1 year old) in GitHub
     if let Some(latest_release) = github::latest_release(&input.gh_md) {
         let created_at = OffsetDateTime::parse(&latest_release.created_at, &Rfc3339)?;
-        let one_year_ago = (OffsetDateTime::now_utc() - Duration::days(365)).unix_timestamp();
+        let one_year_ago = (OffsetDateTime::now_utc() - Duration::days(188)).unix_timestamp();
         if created_at.unix_timestamp() > one_year_ago {
             return Ok(CheckOutput::passed().url(Some(latest_release.url.clone())));
         }
