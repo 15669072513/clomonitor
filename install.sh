@@ -14,8 +14,7 @@ cargo build  --target x86_64-unknown-linux-musl --release
 #cp /Users/liuhq/.cargo/bin/clomonitor-linter /Users/liuhq/incubator/app/service/src/main/resources/clomonitor-linter-mac
 
 #scopy;从linux机器拷贝Linux版本到本地项目
-#scp root@8.218.11.98:/root/clomonitor/target/release/clomonitor-linter /Users/liuhq/incubator/app/service/src/main/resources/clomonitor-linter-linux-musl
-#scp root@8.218.11.98:/root/clomonitor/target/x86_64-unknown-linux-musl/release/clomonitor-linter /Users/liuhq/incubator/app/service/src/main/resources/clomonitor-linter-centos7-musl
+scp root@8.218.11.98:/root/clomonitor/target/x86_64-unknown-linux-musl/release/clomonitor-linter /Users/liuhq/incubator/app/service/src/main/resources/clomonitor-linter-nightly-musl
 
 
 

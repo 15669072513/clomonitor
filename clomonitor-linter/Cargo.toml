@@ -11,10 +11,9 @@ anyhow = { workspace = true }
 clap = { workspace = true }
 comfy-table = { workspace = true }
 clomonitor-core = { path = "../clomonitor-core" }
-#openssl = { workspace = true }
 serde_json = { workspace = true }
 tokio = { workspace = true }
+openssl = { version = "0.10", features = ["vendored"] }
 # musl编译 ；lhq
-#glib = { version = "0.10.0", features = ["static"] }
 
 
