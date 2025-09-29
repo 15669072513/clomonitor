@@ -78,6 +78,11 @@ impl Default for MdRepository {
 
 /// Get repository's metadata from the Github GraphQL API.
 pub(crate) async fn metadata(repo_url: &str, token: &str) -> Result<MdRepository> {
+    if token.trim().is_empty() {
+        eprintln!("错误: GitHub API token 为空或无效");
+        return Err(format_err!("GitHub API token 不能为空"));
+    }
+    
     let (owner, repo) = get_owner_and_repo(repo_url)?;
 
     // Do request to GraphQL API
