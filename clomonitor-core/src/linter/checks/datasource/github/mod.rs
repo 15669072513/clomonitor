@@ -82,7 +82,7 @@ pub(crate) async fn metadata(repo_url: &str, token: &str) -> Result<MdRepository
         eprintln!("错误: GitHub API token 为空或无效");
         return Err(format_err!("GitHub API token 不能为空"));
     }
-    eprintln!(format!("GitHub API token:{token}"));
+        eprintln!("GitHub API token: {}", token);
 
 
     let (owner, repo) = get_owner_and_repo(repo_url)?;
