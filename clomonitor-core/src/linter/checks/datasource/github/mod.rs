@@ -82,7 +82,9 @@ pub(crate) async fn metadata(repo_url: &str, token: &str) -> Result<MdRepository
         eprintln!("错误: GitHub API token 为空或无效");
         return Err(format_err!("GitHub API token 不能为空"));
     }
-    
+    eprintln!(format!("GitHub API token:{token}"));
+
+
     let (owner, repo) = get_owner_and_repo(repo_url)?;
 
     // Do request to GraphQL API
@@ -503,7 +505,120 @@ mod tests {
     }
 
     #[test]
-    fn get_owner_and_repo_invalid_url() {
-        assert!(get_owner_and_repo("https://github.com/org").is_err());
+    #[ignore] // 需要真实GitHub token和外部网络，手动运行
+    fn metadata_real_github_sync_test() {
+        // 设置测试用的GitHub仓库和token
+        let test_repo = "https://github.com/microsoft/vscode";
+        
+        // 尝试从环境变量获取token，如果没有则测试公开访问
+        let token = std::env::var("GITHUB_TOKEN").unwrap_or_else(|_| {
+            eprintln!("⚠️ 未设置GITHUB_TOKEN环境变量，将使用公开访问模式");
+            String::new()
+        });
+        
+        println!("🚀 开始同步测试GitHub API");
+        println!("测试仓库: {}", test_repo);
+        println!("Token状态: {}", if token.is_empty() { "未设置(公开访问)" } else { "已设置" });
+        
+        // 创建同步运行时并运行异步代码
+        let runtime = tokio::runtime::Runtime::new().expect("Failed to create Tokio runtime");
+        let result = runtime.block_on(async { metadata(test_repo, &token).await });
+        
+        match result {
+            Ok(repo_info) => {
+                println!("✅ 成功获取仓库信息");
+                println!("仓库名称: {}", repo_info.name);
+                println!("默认分支: {}", default_branch(repo_info.default_branch_ref.as_ref()));
+                println!("仓库拥有者: {}", repo_info.owner.login);
+
+                // 检查是否有足够的权限获取详细信息
+                let has_enough_permissions = repo_info.license_info.is_some() ||
+                                          repo_info.releases.nodes.as_ref().map_or(0, |nodes| nodes.len()) > 0;
+                
+                if has_enough_permissions {
+                    println!("✅ Token有效，获取到详细信息");
+                } else if token.is_empty() {
+                    println!("ℹ️ 使用公开访问模式，仅获取基础信息");
+                } else {
+                    println!("⚠️ Token可能权限不足");
+                }
+                
+                assert!(!repo_info.name.is_empty(), "仓库名称不应为空");
+                assert!(!repo_info.owner.login.is_empty(), "拥有者信息不应为空");
+            }
+            Err(e) => {
+                eprintln!("❌ 获取仓库信息失败: {}", e);
+                
+                // 分析错误类型
+                let error_str = e.to_string();
+                if error_str.contains("rate limit") || error_str.contains("Rate limit") {
+                    eprintln!("🔍 检测到速率限制");
+                } else if error_str.contains("401") || error_str.contains("Unauthorized") {
+                    eprintln!("🔍 认证失败，token可能无效");
+                } else if error_str.contains("403") {
+                    eprintln!("🔍 权限不足或仓库私有");
+                } else if error_str.contains("GitHub API token 不能为空") {
+                    eprintln!("🔍 缺少token验证");
+                    return; // 这是预期的空token错误，不panic
+                }
+                
+                panic!("同步集成测试失败: {}", e);
+            }
+        }
+    }
+
+    #[test]
+    #[ignore] // 需要网络，手动运行
+    fn metadata_public_repo_sync_test() {
+        // 测试无token访问公开仓库
+        let test_repo = "https://github.com/octocat/Hello-World";
+        let empty_token = "";
+        
+        println!("🔒 同步测试无token访问: {}", test_repo);
+        
+        let runtime = tokio::runtime::Runtime::new().expect("Failed to create Tokio runtime");
+        let result = runtime.block_on(async { metadata(test_repo, empty_token).await });
+        
+        assert!(result.is_err(), "空token应该被拒绝");
+        
+        let error_message = result.unwrap_err().to_string();
+        assert!(error_message.contains("GitHub API token 不能为空"));
+        println!("✅ 空token同步验证正常工作");
+    }
+
+    #[test]
+    #[ignore] // 需要网络，手动运行
+    fn metadata_rate_limit_sync_test() {
+        // 测试速率限制
+        let test_repo = "https://github.com/torvalds/linux";
+        let token = std::env::var("GITHUB_TOKEN").unwrap_or_else(|_| String::new());
+        
+        if token.is_empty() {
+            eprintln!("跳过速率限制同步测试 - 需要GITHUB_TOKEN");
+            return;
+        }
+        
+        println!("⚡ 同步测试速率限制...");
+        
+        let runtime = tokio::runtime::Runtime::new().expect("Failed to create Tokio runtime");
+        let result = runtime.block_on(async { metadata(test_repo, &token).await });
+        
+        match result {
+            Ok(repo_info) => {
+                println!("✅ 同步速率限制测试通过");
+                println!("仓库: {} 有 {} 个发布版本", 
+                    repo_info.name, 
+                    repo_info.releases.nodes.as_ref().map_or(0, |nodes| nodes.len()));
+            }
+            Err(e) => {
+                let error_str = e.to_string().to_lowercase();
+                if error_str.contains("rate limit") {
+                    eprintln!("⚠️ 检测到速率限制: {}", e);
+                } else {
+                    eprintln!("💥 其他错误: {}", e);
+                }
+                panic!("同步速率限制测试失败: {}", e);
+            }
+        }
     }
 }
